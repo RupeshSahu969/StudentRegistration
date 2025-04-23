@@ -1,40 +1,81 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import CourseTypes from './Components/CourseTypes';
-import Courses from './Components/DataCourses';
-import CourseOfferings from './Components/DataOfferings';
-import StudentRegistrations from './Components/Student';
-import DataCourses from './Components/DataCourses';
-import DataOfferings from './Components/DataOfferings';
-import Student from './Components/Student';
+import React, { useState } from "react";
+import CourseTypes from "./Components/CourseTypes";
+import DataCourses from "./Components/DataCourses";
+import DataOfferings from "./Components/DataOfferings";
+import Student from "./Components/Student";
+import { Container, Row, Col, Nav, NavItem, NavLink } from "reactstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
 const App = () => {
-  return (
-    <>
-      <div className="container mt-4">
-        <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4">
-          <ul className="navbar-nav">
-            <li className="nav-item"><Link className="nav-link" to="/course-types">Course Types</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/courses">Courses</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/course-offerings">Course Offerings</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/registrations">Student Registrations</Link></li>
-          </ul>
-        </nav>
-        </div>
-  
-        <Routes>
-      
+  const [activeTab, setActiveTab] = useState("1");
+  const [courseTypes, setCourseTypes] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [offerings, setOfferings] = useState([]);
 
-      
-        <Route path="/course-types" element={<CourseTypes />} />
-        <Route path="/courses" element={<DataCourses />} />
-        <Route path="/course-offerings" element={<DataOfferings />} />
-        <Route path="/registrations" element={<Student />} />
-      
-    
-  </Routes>
-    </>
-   
+  const toggle = (tab) => {
+    if (activeTab !== tab) setActiveTab(tab);
+  };
+
+  return (
+    <Container className="my-5">
+      <h1 className="text-center mb-4">Course Portal</h1>
+
+      <Nav tabs className="mb-4 justify-content-center">
+        <NavItem>
+          <NavLink
+            className={activeTab === "1" ? "active" : ""}
+            onClick={() => toggle("1")}
+          >
+            Course Types
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink
+            className={activeTab === "2" ? "active" : ""}
+            onClick={() => toggle("2")}
+          >
+            Courses
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink
+            className={activeTab === "3" ? "active" : ""}
+            onClick={() => toggle("3")}
+          >
+            Course Offerings
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink
+            className={activeTab === "4" ? "active" : ""}
+            onClick={() => toggle("4")}
+          >
+            Student Registrations
+          </NavLink>
+        </NavItem>
+      </Nav>
+
+      <Row className="justify-content-center">
+        <Col md="10" lg="8">
+          {activeTab === "1" && (
+            <CourseTypes types={courseTypes} setTypes={setCourseTypes} />
+          )}
+          {activeTab === "2" && (
+            <DataCourses courses={courses} setCourses={setCourses} />
+          )}
+          {activeTab === "3" && (
+            <DataOfferings
+              courseTypes={courseTypes}
+              courses={courses}
+              offerings={offerings}
+              setOfferings={setOfferings}
+            />
+          )}
+          {activeTab === "4" && <Student offerings={offerings} />}
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
